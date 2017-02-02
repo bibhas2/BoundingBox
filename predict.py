@@ -4,7 +4,7 @@ import tflearn
 from image_loader import load_image_samples
 from nn_model import build_model
 
-testImages, testClassification = load_image_samples("test_images")
+testImages, testClassification, fileNameList = load_image_samples("test_images")
 
 #Number of classes
 K = testClassification.shape[1]
@@ -26,9 +26,9 @@ model.load("./marker-classifier.tfl")
 predictedClassification = model.predict(testImages)
 
 for idx, c in enumerate(testClassification):
-    print "Expected"
+    print "Expected for: ", fileNameList[idx]
     print c
-    
+
     print "Predicted"
     print predictedClassification[idx]
     print "======="

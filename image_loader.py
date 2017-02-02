@@ -6,6 +6,7 @@ def load_image_samples(dirName):
     MAX_NUM_SAMPLES = 10000
     imageList = []
     classificationList = []
+    fileNameList = []
     imageClassList = ["marker", "not_marker"]
 
     for imageClassIndex in range(len(imageClassList)):
@@ -26,5 +27,6 @@ def load_image_samples(dirName):
             #Append this image to the result
             imageList.append(image)
             classificationList.append(trainingClassification)
+            fileNameList.append(imageFile)
 
-    return np.array(imageList), np.array(classificationList)
+    return np.array(imageList), np.array(classificationList), fileNameList
