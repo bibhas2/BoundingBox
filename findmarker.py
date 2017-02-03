@@ -61,13 +61,7 @@ b = tf.placeholder(tf.float32, [K])
 # The operation that calculates predictions
 Y = tf.nn.softmax(tf.matmul(X, W) + b)
 
-#Cost function
-cross_entropy = -tf.reduce_mean(Y_ * tf.log(Y))
-
-init = tf.global_variables_initializer()
 sess = tf.Session()
-sess.run(init)
-
 train_data={X: testImages, W: trainWeights, b: trainBiases}
 
 #Apply the final weights and biases on the training data
