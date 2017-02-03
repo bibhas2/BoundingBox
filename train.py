@@ -4,7 +4,7 @@ import tflearn
 from image_loader import load_image_samples
 from nn_model import build_model
 
-trainImages, trainClassification = load_image_samples("train_images")
+trainImages, trainClassification, fileNames = load_image_samples("train_images")
 
 #Number of classes
 K = trainClassification.shape[1]
@@ -22,7 +22,7 @@ print "Shape of training samples:", imageHeight, imageWidth, numChannels
 model = build_model(K, imageHeight, imageWidth, numChannels)
 
 # Train it! We'll do 100 training passes and monitor it as it goes.
-model.fit(trainImages, trainClassification, n_epoch=35, show_metric=True)
+model.fit(trainImages, trainClassification, n_epoch=45, show_metric=True)
 
 # Save model when training is complete to a file
 print "Saving model"
