@@ -7,40 +7,35 @@ import matplotlib.image as img
 
 tf.set_random_seed(0)
 
+#Read the full receipt image
 image = img.imread('yingthai.png')
+#Convert the image to greyscale
 grey_image = image.mean(2)
 
-width = 225
-height = 40
-
-scanIncrement = 2
+#Sliding window size is same as the size
+#of the marker image we trained with.
+windowWidth = 225
+windowHeight = 40
+strideAmount = 2
 
 def constructInput():
 	images = []
-	classes = []
-	filenames = []
+	windowCoordinates = []
 
-	#xOffset = 55
-	#yOffset = 500
+	for xOffset in xrange(0, grey_image.shape[1] - windowWidth, strideAmount):
+		for yOffset in xrange(0, grey_image.shape[0] - windowHeight, strideAmount):
 
-	for xOffset in xrange(0, grey_image.shape[1] - width, scanIncrement):
-		for yOffset in xrange(0, grey_image.shape[0] - height, scanIncrement):
-
-			#this_image = grey_image[0:40 , 0:225]
-			#this_image = grey_image[0:225 , 0:40]
-			this_image = grey_image[yOffset:(yOffset + height) , xOffset:(xOffset + width)]
+			this_image = grey_image[yOffset:(yOffset + windowHeight) , xOffset:(xOffset + windowWidth)]
 			this_image = np.reshape(this_image, this_image.shape[0] * this_image.shape[1])
 			images.append(this_image)
-			classes.append(np.array([xOffset, yOffset]))
-			filenames.append("test")
+			windowCoordinates.append(np.array([xOffset, yOffset]))
 	
-	return np.asarray(images), np.asarray(classes) , filenames
+	return np.asarray(images), np.asarray(windowCoordinates)
 
-#testImages, testClassification, fileNameList = load_image_samples("test_images")
-testImages, testClassification, fileNameList = constructInput()
+testImages, windowCoordinates = constructInput()
 
 #Number of classes
-K = testClassification[0].shape[0]
+K = 2
 #Number of training samples
 m = testImages.shape[0]
 #Number of features
@@ -73,7 +68,7 @@ init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 
-train_data={X: testImages, Y_: testClassification, W: trainWeights, b: trainBiases}
+train_data={X: testImages, W: trainWeights, b: trainBiases}
 
 #Apply the final weights and biases on the training data
 checkResult = sess.run(Y, feed_dict=train_data)
@@ -82,13 +77,10 @@ maxIndex = 0
 maxVal = 0 
 
 for idx, result in enumerate(checkResult):
-    #print "File: ", fileNameList[idx]
-    #print "Prediction:"
-    #print checkResult[idx]
     if checkResult[idx][0] > maxVal:
 			maxIndex = idx
 			maxVal = checkResult[idx][0]
 
 print "maxIndex: ", maxIndex
-print "xOffset: ", testClassification[maxIndex][0]
-print "yOffset: ", testClassification[maxIndex][1]
+print "xOffset: ", windowCoordinates[maxIndex][0]
+print "yOffset: ", windowCoordinates[maxIndex][1]
