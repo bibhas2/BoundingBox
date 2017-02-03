@@ -67,13 +67,9 @@ train_data={X: testImages, W: trainWeights, b: trainBiases}
 #Apply the final weights and biases on the training data
 checkResult = sess.run(Y, feed_dict=train_data)
 
-maxIndex = 0
-maxVal = 0 
-
-for idx, result in enumerate(checkResult):
-    if checkResult[idx][0] > maxVal:
-			maxIndex = idx
-			maxVal = checkResult[idx][0]
+#Find out the index of the maximum probability of
+#a window being a marker
+maxIndex = np.argmax(checkResult[:,0])
 
 print "maxIndex: ", maxIndex
 print "xOffset: ", windowCoordinates[maxIndex][0]
